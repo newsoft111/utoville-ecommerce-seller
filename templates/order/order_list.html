@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+{% load util_filter %}
+{% load mathfilters %}
+
+<!-- Begin page -->
+
+<div class="page-content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12">
+				<div class="page-title-box d-flex align-items-center justify-content-between">
+					<h4 class="mb-0">주문내역</h4>
+
+					<div class="page-title-right">
+						<ol class="breadcrumb m-0">
+							<li class="breadcrumb-item"><a href="javascript: void(0);">Contacts</a></li>
+							<li class="breadcrumb-item active">User List</li>
+						</ol>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- end page title -->
+
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="card-body">
+						<div class="row mb-3">
+							<div class="col-12 text-end">
+								<a href="#" class="btn btn-light">취소</a>
+								<a href="#" class="btn btn-primary">접수</a>
+							</div><!-- end col -->
+						</div><!-- end row -->
+						
+						<div class="table-responsive">
+							<table class="table table-bordered align-middle table-nowrap table-check">
+								<thead>
+									<tr>
+										<th scope="col" style="width: 50px;">
+											<div class="form-check font-size-16">
+												<input type="checkbox" class="form-check-input" id="checkAll">
+												<label class="form-check-label" for="checkAll"></label>
+											</div>
+										</th>
+										<th scope="col">주문번호</th>
+										<th scope="col">상태</th>
+										<th scope="col">상품명</th>
+										<th scope="col">옵션</th>
+										<th scope="col">수량</th>
+										<th scope="col">이름</th>
+										<th scope="col">연락처</th>
+										<th scope="col">남은수량</th>
+										<th scope="col">결제일</th>
+									</tr><!-- end tr -->
+								</thead><!-- end thead -->
+								<tbody>
+									{% if not order_item_list %}
+									<tr>
+										<td class="border-bottom-0 text-center p-5" colspan="10">주문이 없습니다.</td>
+									</tr>
+									{% endif%}
+									
+									{% for orderItem in order_item_list %}
+									<tr>
+										<th scope="row">
+											<div class="form-check font-size-16">
+												<input type="checkbox" class="form-check-input" id="contacusercheck1">
+												<label class="form-check-label" for="contacusercheck1"></label>
+											</div>
+										</th>
+
+										<td>
+											<a href="#!" class="text-link fw-medium">{{orderItem.order_uid}}</a>
+										</td>
+
+										<td>
+											<span href="#" class="badge badge-soft-primary">취소</span>
+										</td>
+
+										<td>
+											<a href="#!" class="text-link fw-medium">{{orderItem.product_name}}</a>
+										</td>
+
+										<td>
+											{{orderItem.variant_value}}
+										</td>
+
+										<td>
+											{{orderItem.ordered_quantity}}개
+										</td>
+
+										<td>
+											{{orderItem.order.username}}
+										</td>
+
+										<td>
+											{{orderItem.order.username}}
+										</td>
+
+										<td>
+											{{orderItem.ordered_quantity|sub:orderItem.shipped_quantity}}개
+										</td>
+
+										<td>
+											{{orderItem.order.paid_at}}
+										</td>
+									</tr><!-- end tr -->
+									{% endfor %}
+								</tbody><!-- end tbody -->
+							</table><!-- end table -->
+						</div><!-- end table responsive -->
+
+						<div class="row g-0 text-center text-sm-start">
+							<!-- end col -->
+							<div class="col-12">
+								<ul class="pagination pagination-rounded justify-content-center mb-sm-0">
+									{% if order_item_list.has_previous %}
+									<li class="page-item">
+										<a href="?p={{order_item_list.previous_page_number }}" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
+									</li>
+									{% else %}
+									<li class="page-item disabled">
+										<span class="page-link"><i class="mdi mdi-chevron-left"></i></span>
+									</li>
+									{% endif %}
+									
+									{% for page_number in order_item_list.paginator.page_range %}
+										{% if page_number >= order_item_list.number|add:-2 and page_number <= order_item_list.number|add:2 %}
+											{% if page_number == order_item_list.number %}
+											<li class="page-item active">
+												<span class="page-link">{{ page_number }}</span>
+											</li>
+											{% else %}
+											<li class="page-item">
+												<a href="?p={{page_number }}" class="page-link">{{ page_number }}</a>
+											</li>
+											{% endif %}
+										{% endif %}
+									{% endfor %}
+									
+									{% if order_item_list.has_next  %}
+									<li class="page-item">
+										<a href="?p={{order_item_list.next_page_number }}" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
+									</li>
+									{% else %}
+									<li class="page-item disabled">
+										<span class="page-link"><i class="mdi mdi-chevron-right"></i></span>
+									</li>
+									{% endif %}
+								</ul>
+							</div><!-- end col -->
+						</div><!-- end row -->
+						
+					</div><!-- end card body -->
+				</div><!-- end card -->
+			</div><!-- end col -->
+		</div><!-- end row -->
+	</div>
+</div>
+{% endblock %}

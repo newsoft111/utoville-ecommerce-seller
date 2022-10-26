@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+{% load util_filter %}
+
+<!-- Begin page -->
+
+<div class="page-content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12">
+				<div class="page-title-box d-flex align-items-center justify-content-between">
+					<h4 class="mb-0">문의내역</h4>
+
+					<div class="page-title-right">
+						<ol class="breadcrumb m-0">
+							<li class="breadcrumb-item"><a href="javascript: void(0);">Contacts</a></li>
+							<li class="breadcrumb-item active">User List</li>
+						</ol>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- end page title -->
+
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="card-body">						
+						<div class="table-responsive">
+							<table class="table table-bordered align-middle table-nowrap table-check">
+								<thead>
+									<tr>
+										<th scope="col" style="width: 50px;"></th>
+										<th scope="col">제목</th>
+										<th scope="col" style="width: 100px;">상태</th>
+										<th scope="col" style="width:15%;">날짜</th>
+									</tr><!-- end tr -->
+								</thead><!-- end thead -->
+								<tbody>
+									{% for qna in qna_list %}
+									<tr>
+										<th scope="row">
+											{{forloop.counter}}
+										</th>
+
+										<td>
+											<a href="{% url 'qna:detail' qna.pk %}" class="text-link fw-medium">곰같은 사나이</a>
+										</td>
+
+										<td>
+											<span href="#" class="badge badge-soft-primary">취소</span>
+										</td>
+
+										<td>
+											2022-01-01 11:11:11
+										</td>
+									</tr><!-- end tr -->
+									{% endfor %}
+								</tbody><!-- end tbody -->
+							</table><!-- end table -->
+						</div><!-- end table responsive -->
+
+						<div class="row g-0 text-center text-sm-start">
+							<!-- end col -->
+							<div class="col-12">
+								<ul class="pagination pagination-rounded justify-content-center mb-sm-0">
+									<li class="page-item disabled">
+										<a href="#" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
+									</li>
+									<li class="page-item">
+										<a href="#" class="page-link">1</a>
+									</li>
+									<li class="page-item active">
+										<a href="#" class="page-link">2</a>
+									</li>
+									<li class="page-item">
+										<a href="#" class="page-link">3</a>
+									</li>
+									<li class="page-item">
+										<a href="#" class="page-link">4</a>
+									</li>
+									<li class="page-item">
+										<a href="#" class="page-link">5</a>
+									</li>
+									<li class="page-item">
+										<a href="#" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
+									</li>
+								</ul>
+							</div><!-- end col -->
+						</div><!-- end row -->
+						
+					</div><!-- end card body -->
+				</div><!-- end card -->
+			</div><!-- end col -->
+		</div><!-- end row -->
+	</div>
+</div>
+{% endblock %}
