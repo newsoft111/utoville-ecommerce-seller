@@ -47,7 +47,7 @@
 										</th>
 
 										<td>
-											<a href="{% url 'qna:detail' qna.pk %}" class="text-link fw-medium">곰같은 사나이</a>
+											<a href="{% url 'qna:detail' qna.pk %}" class="text-link fw-medium">{{qna.question}}</a>
 										</td>
 
 										<td>
@@ -55,7 +55,7 @@
 										</td>
 
 										<td>
-											2022-01-01 11:11:11
+											{{qna.questioned_at}}
 										</td>
 									</tr><!-- end tr -->
 									{% endfor %}
