@@ -16,12 +16,10 @@ def qna_list(request):
 	q = Q()
 	q &= Q(user = request.user)
 	product_list =  Product.objects.filter(q).values_list('id', flat=True).order_by( "-id")
-	print(product_list)
 	
 	q = Q()
 	q &= Q(product__in=product_list)
 	qna_list =  ProductQnA.objects.filter(q).order_by('-id')
-	print(qna_list)
 
 	page        = int(request.GET.get('p', 1))
 	pagenator   = Paginator(qna_list, 12)
