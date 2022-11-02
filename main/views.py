@@ -1,12 +1,28 @@
 from django.shortcuts import render, redirect
-
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from order.models import *
 # Create your views here.
-
+@login_required(login_url="account:login")
 def index(request):
 	seo = {
 		'title': "유토빌",
 	}
-	if request.user.is_authenticated: #로그인 상태면
-		return render(request, 'main/index.html',{"seo":seo})
-	else:
-		return redirect("account:login")
+
+	order_data_calendar = []
+
+	q = Q()
+	q &= Q(product__user=request.user)
+
+	order_items = OrderItem.objects.filter(q)
+	for items in order_items:
+		item_data = {'title': items.product_name, 'start': str(items.schedule_date), 'className': 'bg-success'
+		if items.is_delivered else 'bg-info'}
+		order_data_calendar.append(item_data)
+
+
+	return render(request, 'main/index.html',{
+		"seo":seo,
+		"order_data_calendar": order_data_calendar,
+	})
+
