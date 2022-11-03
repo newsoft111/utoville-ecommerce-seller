@@ -5,5 +5,5 @@ app_name = 'order'
 
 urlpatterns = [
 	path('', views.order_list, name='list'),
-	path('preview/', views.order_preview, name='preview'),
+	path('preview/', views.OrderPreview.as_view(), name='preview'),
 ]

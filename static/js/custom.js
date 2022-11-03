@@ -1,10 +1,9 @@
 function isEmpty(str){
-		  
 	if(typeof str == "undefined" || str == null || str == "")
-		  return true;
+		return true;
 	else
-		  return false ;
- }
+		return false ;
+}
  
  function openModal(subject, content, before_modal_id, option) {
 	document.querySelector("[id=modal_subject]").innerHTML = subject;

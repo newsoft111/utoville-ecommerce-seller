@@ -29,28 +29,25 @@
 					<div class="card-header justify-content-between d-flex align-items-center">
 						<h4 class="card-title">Orders</h4>
 						<div class="dropdown">
-							<a class="dropdown-toggle btn btn-light btn-sm" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-								aria-expanded="false"><span class="text-muted">Weekly<i
-										class="mdi mdi-chevron-down ms-1"></i></span>
+							<a class="dropdown-toggle btn btn-light btn-sm" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="text-muted" id="order-preview-text">Weekly
+								<i class="mdi mdi-chevron-down ms-1"></i></span>
 							</a>
 
 							<div class="dropdown-menu">
-								<a class="dropdown-item" href="#">Monthly</a>
-								<a class="dropdown-item" href="#">Yearly</a>
-								<a class="dropdown-item" href="#">Weekly</a>
+								<a class="dropdown-item" href="#!" onclick="get_order_preview_data('Monthly');">Monthly</a>
+								<a class="dropdown-item" href="#!" onclick="get_order_preview_data('Weekly');">Weekly</a>
 							</div>
 						</div>
 						</div><!-- end card header --> 
 					<div class="card-body">
 						<div class="d-flex justify-content-between">
 							<div>
-								<h4 class="mt-2 font-weight-bold mb-2 d-flex align-items-center">
-									$46.34k 건
-								</h4>
+								<h4 class="mt-2 font-weight-bold mb-2 d-flex align-items-center" id="order-preview-count"></h4>
 							</div>
 						</div>
 
-						<div id="total_order_chart" class="apex-charts"></div>                              
+						<div id="order-preview-chart" class="apex-charts"></div>                              
 					</div>
 				</div><!--end card-->
 				
@@ -144,45 +141,50 @@
 </div>
 <!-- End Page-content -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
 <script>
-var options={
-	series:[{
-		name:"주문수",
-		data:[10,41,35,51,49,62,69,91,148]
-	}],
-	chart:{
-		height:200,
-		type:"line",
-		zoom:{enabled:!1},
-		toolbar:{show:!1}},
-		markers:{size:4},
-		dataLabels:{enabled:!1},
-		stroke:{curve:"straight"},
-		xaxis:{categories:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"]
-	}
-}
-var chart = new ApexCharts(document.querySelector("#total_order_chart"), options);
-chart.render();
 
 var options={
 	series:[{
 		name:"주문수",
-		data:[10,41,35,51,49,62,69,91,148]
+		data:[]
 	}],
 	chart:{
 		height:200,
 		type:"line",
 		zoom:{enabled:!1},
-		toolbar:{show:!1}},
-		markers:{size:4},
-		dataLabels:{enabled:!1},
-		stroke:{curve:"straight"},
-		xaxis:{categories:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"]
-	}
+		toolbar:{show:!1}
+	},
+	markers:{size:4},
+	dataLabels:{enabled:!1},
+	stroke:{curve:"straight"},
+	xaxis:{categories:[]}
 }
-var chart = new ApexCharts(document.querySelector("#total_profit_chart"), options);
+
+var chart = new ApexCharts(document.querySelector("#order-preview-chart"), options);
 chart.render();
+
+async function get_order_preview_data(value) {
+	if (isEmpty(value)) {
+		value = 'Weekly';
+	}
+
+	document.querySelector("span[id=order-preview-text]").innerHTML = `${value}<i class="mdi mdi-chevron-down ms-1"></i></span>`;
+	document.querySelector("#order-preview-chart").innerHTML = '';
+
+    const response = await fetch(`{% url 'order:preview' %}?standard=${value}`, 
+	{
+		method: "GET",
+	})
+	.then(response => response.json())
+	.then(data => {
+		document.querySelector('h4[id=order-preview-count]').innerHTML = '총:' + data.count + '건';
+		chart.updateSeries([{
+			data: data.chart_data
+		}])
+	});
+}
+get_order_preview_data();
+
 
 var order_data_calendar = {{ order_data_calendar|safe }}
 document.addEventListener("DOMContentLoaded", function() {
