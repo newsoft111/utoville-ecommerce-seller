@@ -71,6 +71,17 @@ class OrderItem(models.Model):
 		else:
 			return self.product_price * self.ordered_quantity
 
+	def delivery_done(self):
+		self.is_delivered = True
+		self.delivered_at = datetime.now()
+		self.save()
+
+	def order_cancel(self):
+		self.is_delivered = False
+		self.is_cancelled = True
+		self.cancelled_at = datetime.now()
+		self.save()
+
 	def save(self, *args, **kwargs):
 		super().save(*args, **kwargs)
 		order_uid = str(calendar.timegm(time.gmtime()))+str(self.pk)

@@ -28,6 +28,39 @@ def order_list(request):
 		'order_item_list': order_item_list
 	})
 
+def order_edit_status(request):
+	order_id = request.POST.get('order_id')
+	event_type  = request.POST.get('event_type')
+
+	if event_type == '' or event_type is None:
+		return JsonResponse({
+			'result': '201',
+			'result_text': '유형을 선택해주세요.'
+		})
+
+	try:
+		order_item_obj = OrderItem.objects.get(pk=order_id)
+	except:
+		return JsonResponse({
+			'result': '201',
+			'result_text': '알수 없는 오류입니다. 다시시도 해주세요.'
+		})
+	
+	if event_type == '배달완료':
+		order_item_obj.delivery_done()
+		return JsonResponse({
+			'result': '200',
+			'result_text': '수정이 완료되었습니다.'
+		})
+
+	elif event_type == '주문취소':
+		order_item_obj.order_cancel()
+		return JsonResponse({
+			'result': '200',
+			'result_text': '수정이 완료되었습니다.'
+		})
+	
+
 
 class OrderPreview(View):
 	def get(self, request):
