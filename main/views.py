@@ -16,8 +16,8 @@ def index(request):
 
 	order_items = OrderItem.objects.filter(q)
 	for items in order_items:
-		item_data = {'title': items.product_name, 'start': str(items.schedule_date), 'className': 'bg-success'
-		if items.is_delivered else 'bg-info'}
+		item_data = {'id':items.pk, 'title': items.product_name, 'start': str(items.schedule_date), 'className': 'bg-success'
+		if items.is_delivered else 'bg-danger' if items.is_cancelled else 'bg-info'}
 		order_data_calendar.append(item_data)
 
 
