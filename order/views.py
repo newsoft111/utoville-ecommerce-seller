@@ -71,6 +71,7 @@ def order_edit_status(request):
 			is_accepted = True, 
 			accepted_at = datetime.now()
 		)
+
 		return JsonResponse({
 			'result': '200',
 			'result_text': '접수가 완료되었습니다.'
@@ -95,7 +96,7 @@ class OrderPreview(View):
 			self.start_date = datetime.strptime(request.GET.get("start_date"), "%Y-%m-%d")
 		else:
 			self.start_date = self.end_date - timedelta(days=7)
-		q &= Q(order__paid_at__range = [self.start_date, self.end_date])
+		q &= Q(order__payment__paid_at__range = [self.start_date, self.end_date])
 
 		order_items = OrderItem.objects.filter(q)
 
@@ -108,7 +109,7 @@ class OrderPreview(View):
 			
 		total_price = 0
 		for items in order_items:
-			chart_data[items.order.paid_at.strftime(self.date_format)] += 1
+			chart_data[items.order.payment.paid_at.strftime(self.date_format)] += 1
 			total_price += items.sub_total_price()
 			
 			
