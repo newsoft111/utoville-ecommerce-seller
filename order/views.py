@@ -16,7 +16,7 @@ def order_list(request):
 	}
 	q = Q()
 	q &= Q(product__user = request.user)
-	q &= Q(order__is_paid = True)
+	q &= Q(order__payment__is_paid = True)
 	order_item_list =  OrderItem.objects.filter(q).order_by( "-id")
 	
 	page        = int(request.GET.get('p', 1))
