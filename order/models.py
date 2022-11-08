@@ -63,6 +63,17 @@ class OrderItem(models.Model):
 	is_subscribe = models.BooleanField(default=False)
 	schedule_date= models.DateTimeField()
 	order_status = models.CharField(max_length=255)
+
+	def get_status(self):
+		status = ''
+		if self.is_accepted:
+			status = '접수완료'
+		elif self.is_refund_requested:
+			status = '취소완료'
+		else:
+			status = '응답대기'
+		return status
+
 	
 
 	class Meta:

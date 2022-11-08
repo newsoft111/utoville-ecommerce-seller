@@ -32,8 +32,8 @@
 					<div class="card-body">
 						<div class="row mb-3">
 							<div class="col-12 text-end">
-								<a href="#" class="btn btn-light">취소</a>
-								<a href="#" class="btn btn-primary">접수</a>
+								<a href="#!" onclick="event_checked_item('주문취소');" class="btn btn-light">취소</a>
+								<a href="#!" onclick="event_checked_item('주문접수');" class="btn btn-primary">접수</a>
 							</div><!-- end col -->
 						</div><!-- end row -->
 						
@@ -69,7 +69,7 @@
 									<tr>
 										<th scope="row">
 											<div class="form-check font-size-16">
-												<input type="checkbox" class="form-check-input" id="contacusercheck1">
+												<input type="checkbox" class="form-check-input" value="{{orderItem.pk}}" name="order_item_id">
 												<label class="form-check-label" for="contacusercheck1"></label>
 											</div>
 										</th>
@@ -79,7 +79,7 @@
 										</td>
 
 										<td>
-											<span href="#" class="badge badge-soft-primary">취소</span>
+											<span href="#" class="badge badge-soft-primary">{{orderItem.get_status}}</span>
 										</td>
 
 										<td>
@@ -162,4 +162,54 @@
 		</div><!-- end row -->
 	</div>
 </div>
+
+<script>
+let is_run = false;
+
+function event_checked_item(e) {
+	const item_list = document.querySelectorAll("input[name=order_item_id][type=checkbox]:checked");
+
+	let arr = [];
+
+	item_list.forEach(ele => arr.push(ele.value));
+
+	edit_order_status_sumit(e, arr);
+}
+
+async function edit_order_status_sumit(event_type, order_item_id) {
+	if(is_run == true) {
+		openModal('알림','잠시후에 다시시도 해주세요.');
+		return false;
+	}
+
+	is_run = true;
+
+
+	if (event_type == '배송일정수정') {
+		form_data.append('schedule_date', schedule_date);
+	}
+
+    const response = await fetch("{% url 'order:edit_status' %}", {
+		method: "POST",
+		headers: {
+			"X-CSRFToken": getCookie("csrftoken"),
+		},
+		body: JSON.stringify({
+			'event_type':event_type,
+			'order_item_id':order_item_id
+
+		}),
+	})
+	.then(response => response.json())
+	.then(data => {
+		console.log(data);
+		is_run  = false;
+		if (data.result == '200') {
+			openModal("알림", data.result_text, '', 'reload');
+		} else { 
+			openModal("알림", data.result_text, '');
+		}
+	});
+}
+</script>
 {% endblock %}

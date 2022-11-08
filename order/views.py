@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from datetime import datetime, timedelta, date
 from django.views.generic import View
 import pandas as pd
+import json
 # Create your views here.
 
 @login_required(login_url="account:login")
@@ -29,8 +30,9 @@ def order_list(request):
 	})
 
 def order_edit_status(request):
-	order_id = request.POST.get('order_id')
-	event_type  = request.POST.get('event_type')
+	jsonData = json.loads(request.body)
+	event_type  = jsonData.get('event_type')
+	order_item_id = jsonData.get('order_item_id')
 
 	if event_type == '' or event_type is None:
 		return JsonResponse({
@@ -38,26 +40,47 @@ def order_edit_status(request):
 			'result_text': '유형을 선택해주세요.'
 		})
 
-	try:
-		order_item_obj = OrderItem.objects.get(pk=order_id)
-	except:
-		return JsonResponse({
-			'result': '201',
-			'result_text': '알수 없는 오류입니다. 다시시도 해주세요.'
-		})
+	print(order_item_id)
+	print(1)
+	order_item_objs = OrderItem.objects.filter(pk__in=order_item_id)
+	print(2)
+
 	
 	if event_type == '배달완료':
-		order_item_obj.delivery_done()
+		order_item_objs.update(
+			is_delivered = True, 
+			delivered_at = datetime.now()
+		)
 		return JsonResponse({
 			'result': '200',
 			'result_text': '수정이 완료되었습니다.'
 		})
 
 	elif event_type == '주문취소':
-		order_item_obj.order_cancel()
+		order_item_objs.update(
+			is_refund_requested = True, 
+			refund_requested_at = datetime.now()
+		)
 		return JsonResponse({
 			'result': '200',
 			'result_text': '수정이 완료되었습니다.'
+		})
+
+	elif event_type == '주문접수':
+		order_item_objs.update(
+			is_accepted = True, 
+			accepted_at = datetime.now()
+		)
+		return JsonResponse({
+			'result': '200',
+			'result_text': '접수가 완료되었습니다.'
+		})
+
+	
+	else:
+		return JsonResponse({
+			'result': '201',
+			'result_text': '알수 없는 오류입니다. 다시시도 해주세요.'
 		})
 	
 
