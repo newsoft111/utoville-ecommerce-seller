@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 	'qna',
 	'category',
 	'product',
+	'charge',
 ]
 
 AUTH_USER_MODEL = 'account.User'
