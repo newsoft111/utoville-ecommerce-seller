@@ -139,23 +139,19 @@ async function edit_order_status_sumit() {
 
 	is_run = true;
 
-	let order_id = document.querySelector("#scheduleModal").dataset.orderId;
+	let order_item_id = document.querySelector("#scheduleModal").dataset.orderItemId;
 	let event_type = document.querySelector("select[name=event_type]").value;
-
-	let form_data = new FormData();
-	form_data.append('order_id', order_id);
-	form_data.append('event_type', event_type);
-
-	if (event_type == '배송일정수정') {
-		form_data.append('schedule_date', schedule_date);
-	}
 
     const response = await fetch("{% url 'order:edit_status' %}", {
 		method: "POST",
 		headers: {
 			"X-CSRFToken": getCookie("csrftoken"),
 		},
-		body: form_data,
+		body: JSON.stringify({
+			'event_type':event_type,
+			'order_item_id':order_item_id,
+			'schedule_date' : event_type == '배송일정수정' ? schedule_date : undefined,
+		})
 	})
 	.then(response => response.json())
 	.then(data => {
@@ -251,7 +247,7 @@ document.addEventListener("DOMContentLoaded", function() {
             m.changeView(t)
         },
         eventClick: function(e) {
-			my_modal.dataset.orderId = e.event.id;
+			my_modal.dataset.orderItemId = e.event.id;
             n.show();
         },
         events: e
