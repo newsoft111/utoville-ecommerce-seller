@@ -29,6 +29,7 @@ class Order(models.Model):
 		db_table = 'ecommerce_order'
 
 
+
 class OrderItem(models.Model):
 	order = models.ForeignKey(
 			Order,
@@ -63,18 +64,7 @@ class OrderItem(models.Model):
 	is_subscribe = models.BooleanField(default=False)
 	schedule_date= models.DateTimeField()
 	order_status = models.CharField(max_length=255)
-
-	def get_status(self):
-		status = ''
-		if self.is_accepted:
-			status = '접수완료'
-		elif self.is_refund_requested:
-			status = '취소완료'
-		else:
-			status = '응답대기'
-		return status
-
-	
+	status = models.CharField(max_length=255, default='결제대기')
 
 	class Meta:
 		db_table = 'ecommerce_order_item'
@@ -95,3 +85,6 @@ class OrderItem(models.Model):
 		super().save(*args, **kwargs)
 		order_uid = str(calendar.timegm(time.gmtime()))+str(self.pk)
 		OrderItem.objects.filter(id=self.pk).update(order_uid=order_uid)
+	
+	def delivery_done(self):
+		return self.obejct.update()
