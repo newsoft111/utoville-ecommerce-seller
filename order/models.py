@@ -86,5 +86,3 @@ class OrderItem(models.Model):
 		order_uid = str(calendar.timegm(time.gmtime()))+str(self.pk)
 		OrderItem.objects.filter(id=self.pk).update(order_uid=order_uid)
 	
-	def delivery_done(self):
-		return self.obejct.update()
