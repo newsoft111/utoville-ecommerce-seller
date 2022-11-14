@@ -4,7 +4,7 @@ import time
 from product.models import *
 from account.models import UserShippingAddress
 from charge.models import *
-
+from decimal import Decimal
 
 # Create your models here.
 class Order(models.Model):
@@ -22,8 +22,8 @@ class Order(models.Model):
 		Payment,
 		on_delete=models.CASCADE,
 	)
-	total_price = models.PositiveIntegerField(default=0)
-	used_point = models.PositiveIntegerField(default=0)
+	total_price = models.DecimalField(max_digits=14, decimal_places=2)
+	used_point = models.DecimalField(max_digits=14, decimal_places=2)
 
 	class Meta:
 		db_table = 'ecommerce_order'
@@ -55,10 +55,10 @@ class OrderItem(models.Model):
 			on_delete=models.CASCADE,
 	)
 	product_name = models.CharField(max_length=255)
-	product_price = models.PositiveIntegerField()
+	product_price = models.DecimalField(max_digits=14, decimal_places=2)
 	variant = models.CharField(max_length=255, null=True)
 	variant_value = models.CharField(max_length=255, null=True)
-	variant_price = models.PositiveIntegerField(null=True)
+	variant_price = models.DecimalField(max_digits=14, decimal_places=2, null=True)
 	ordered_quantity = models.PositiveIntegerField()
 	shipped_quantity = models.PositiveIntegerField(default=0)
 	is_subscribe = models.BooleanField(default=False)
@@ -77,9 +77,10 @@ class OrderItem(models.Model):
 
 	def sub_total_price(self):
 		if self.variant is not None:
-			return (int(self.product_price) + int(self.variant_price)) * int(self.ordered_quantity)
+			print((self.product_price + self.variant_price))
+			return Decimal(self.product_price + self.variant_price) * Decimal(self.ordered_quantity)
 		else:
-			return int(self.product_price) * int(self.ordered_quantity)
+			return Decimal(self.product_price) * Decimal(self.ordered_quantity)
 
 	def save(self, *args, **kwargs):
 		super().save(*args, **kwargs)
