@@ -5,18 +5,18 @@ def update_status(query_set, event_type):
 		query_set.update(
 			is_delivered = True, 
 			delivered_at = datetime.now(),
-			status = '배달완료'
+			order_item_status = '배달완료'
 		)
 		return {
 			'result': '200',
 			'result_text': '수정이 완료되었습니다.'
 		}
 
-	elif event_type == '주문취소':
+	elif event_type == '주문취소요청':
 		query_set.update(
 			is_refund_requested = True, 
 			refund_requested_at = datetime.now(),
-			status = '주문취소'
+			order_item_status = '주문취소요청'
 		)
 		return {
 			'result': '200',
@@ -25,9 +25,9 @@ def update_status(query_set, event_type):
 
 	elif event_type == '주문접수':
 		query_set.update(
-			is_accepted = True, 
-			accepted_at = datetime.now(),
-			status = '주문접수'
+			is_responded = True, 
+			responded_at = datetime.now(),
+			order_item_status = '주문접수'
 		)
 
 		return {
