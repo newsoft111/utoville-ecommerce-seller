@@ -13,6 +13,7 @@ def index(request):
 
 	q = Q()
 	q &= Q(product__user=request.user)
+	q &= Q(is_accepted=True)
 
 	order_items = OrderItem.objects.filter(q)
 	for items in order_items:
