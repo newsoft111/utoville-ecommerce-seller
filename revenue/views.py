@@ -18,7 +18,7 @@ def revenue_list(request):
 	revenue_seller_objs = RevenueSeller.objects.filter(seller=request.user, date__range=[start_date, end_date])
 	payment_amount = revenue_seller_objs.aggregate(Sum('payment_amount'))['payment_amount__sum']
 	refund_amount = revenue_seller_objs.aggregate(Sum('refund_amount'))['refund_amount__sum']
-	total_payment = payment_amount-refund_amount
+	total_revenue = payment_amount-refund_amount
 
 
 	temp = { po.date: {"payment_amount": po.payment_amount, "refunt_amount": po.payment_amount, "order_count":po.order_count} for po in revenue_seller_objs }
@@ -39,5 +39,5 @@ def revenue_list(request):
 		"revenue_seller_objs": result,
 		'payment_amount': payment_amount,
 		'refund_amount': refund_amount,
-		'total_payment': total_payment
+		'total_revenue': total_revenue
 	})
