@@ -13,12 +13,12 @@ def index(request):
 
 	q = Q()
 	q &= Q(product__user=request.user)
-	q &= Q(is_accepted=True)
+	q &= Q(is_responded=True)
 
 	order_items = OrderItem.objects.filter(q)
 	for items in order_items:
 		item_data = {'id':items.pk, 'title': items.product_name, 'start': str(items.schedule_date), 'className': 'bg-success'
-		if items.status == '배달완료' else 'bg-danger' if items.status == '주문취소' else 'bg-info'}
+		if items.order_item_status == '배달완료' else 'bg-danger' if items.order_item_status == '주문취소' else 'bg-info'}
 		order_data_calendar.append(item_data)
 
 
