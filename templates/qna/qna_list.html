@@ -51,7 +51,13 @@
 										</td>
 
 										<td>
-											<span href="#" class="badge badge-soft-primary">취소</span>
+											<span href="#" class="badge badge-soft-primary">
+												{% if qna.answered_at is not None %}
+												답변완료
+												{% else %}
+												답변대기
+												{% endif %}
+											</span>
 										</td>
 
 										<td>

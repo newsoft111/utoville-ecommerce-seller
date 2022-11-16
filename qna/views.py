@@ -83,7 +83,7 @@ def qna_delete(request):
 		})
 
 	try:
-		qna_obj.is_delete = True
+		qna_obj.is_deleted = True
 		qna_obj.deleted_at = datetime.now()
 		qna_obj.save()
 

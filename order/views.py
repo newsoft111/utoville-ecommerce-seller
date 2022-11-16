@@ -54,6 +54,7 @@ class OrderPreview(View):
 
 		q = Q()
 		q &= Q(product__user=request.user)
+		q &= Q(order__payment__is_paid = True)
 		if request.POST.get('start_date'):
 			self.start_date = datetime.strptime(request.GET.get("start_date"), "%Y-%m-%d")
 		else:
