@@ -17,11 +17,11 @@
 					<div class="card-body p-3">
 						<div class="d-flex justify-content-center align-items-center mb-5">
 							<div class="btn-group">
-								<button type="button" class="btn btn-outline-primary">오늘</button>
-								<button type="button" class="btn btn-outline-primary">1주일</button>
-								<button type="button" class="btn btn-outline-primary">1개월</button>
-								<button type="button" class="btn btn-outline-primary">3개월</button>
-								<button type="button" class="btn btn-outline-primary">6개월</button>
+								<button type="button" class="btn btn-outline-primary" onclick="todayBtn()">오늘</button>
+								<button type="button" class="btn btn-outline-primary" onclick="lastWeekBtn()">1주일</button>
+								<button type="button" class="btn btn-outline-primary" onclick="lastOneMonthBtn()">1개월</button>
+								<button type="button" class="btn btn-outline-primary" onclick="lastThreeMonthBtn()">3개월</button>
+								<button type="button" class="btn btn-outline-primary" onclick="lastSixMonthBtn()">6개월</button>
 							</div>
 							<hr>
 							<div class="d-flex align-items-center ms-5">
@@ -135,21 +135,81 @@
 </div>
 
 <script>
+
 document.getElementById("start-date-input").value = new Date().toISOString().slice(0,10);
 document.getElementById("end-date-input").value = new Date().toISOString().slice(0,10);
+lastOneMonthBtn();
 
-const category_by = document.querySelector('select[name=category_by]');
+function todayBtn(){
+	document.getElementById("start-date-input").value = new Date().toISOString().slice(0,10);
+	document.getElementById("end-date-input").value = new Date().toISOString().slice(0,10);
+}
 
-category_by.addEventListener('change', (event) => {
-	var link = `{{request.path}}?category=${event.target.value}`;
-	location.href=link;
-});
+function lastWeekBtn(){
+	let nowDate = new Date();
+	let weekDate = nowDate.getTime() - (7*24*60*60*1000);
+	nowDate.setTime(weekDate);
 
-const status_by = document.querySelector('select[name=status_by]');
+	let weekYear = nowDate.getFullYear();
+	let weekMonth = nowDate.getMonth() + 1;
+	let weekDay = nowDate.getDate();
 
-status_by.addEventListener('change', (event) => {
-	var link = `{{request.path}}?status=${event.target.value}`;
-	location.href=link;
-});
+	if(weekMonth < 10) {weekMonth = "0" + weekMonth};
+	if(weekDay < 10) {weekDay = "0" + weekDay};
+
+	let resultDate = weekYear + "-" + weekMonth + "-" + weekDay;
+
+  document.getElementById("start-date-input").value = resultDate;
+}  
+
+function lastOneMonthBtn(){
+	let nowDate = new Date();
+	let monthDate = nowDate.getTime() - (30*24*60*60*1000);
+	nowDate.setTime(monthDate);
+
+	let weekYear = nowDate.getFullYear();
+	let weekMonth = nowDate.getMonth() + 1;
+	let weekDay = nowDate.getDate();
+
+	if(weekMonth < 10) {weekMonth = "0" + weekMonth};
+	if(weekDay < 10) {weekDay = "0" + weekDay};
+
+	let resultDate = weekYear + "-" + weekMonth + "-" + weekDay;
+
+  document.getElementById("start-date-input").value = resultDate;	
+}
+function lastThreeMonthBtn(){
+	let nowDate = new Date();
+	let threeMonthDate = nowDate.getTime() - (3*30*24*60*60*1000);
+	nowDate.setTime(threeMonthDate);
+
+	let weekYear = nowDate.getFullYear();
+	let weekMonth = nowDate.getMonth() + 1;
+	let weekDay = nowDate.getDate() - 1;
+
+	if(weekMonth < 10) {weekMonth = "0" + weekMonth};
+	if(weekDay < 10) {weekDay = "0" + weekDay};
+
+	let resultDate = weekYear + "-" + weekMonth + "-" + weekDay;
+
+  document.getElementById("start-date-input").value = resultDate;	
+}
+function lastSixMonthBtn(){
+	let nowDate = new Date();
+	let sixMonthDte = nowDate.getTime() - (6*30*24*60*60*1000);
+	nowDate.setTime(sixMonthDte);
+
+	let weekYear = nowDate.getFullYear();
+	let weekMonth = nowDate.getMonth() + 1;
+	let weekDay = nowDate.getDate() -3;
+
+	if(weekMonth < 10) {weekMonth = "0" + weekMonth};
+	if(weekDay < 10) {weekDay = "0" + weekDay};
+
+	let resultDate = weekYear + "-" + weekMonth + "-" + weekDay;
+
+  document.getElementById("start-date-input").value = resultDate;	
+}
+
 </script>
 {% endblock %}
