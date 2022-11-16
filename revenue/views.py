@@ -16,7 +16,7 @@ def revenue_list(request):
 	if request.GET.get("end_date") is not None and request.GET.get("end_date") != '':
 		end_date = datetime.strptime(request.GET.get("end_date"), "%Y-%m-%d")
 
-	end_date = end_date + timedelta(days=1)
+	start_date = start_date + timedelta(days=1)
 
 	revenue_seller_objs = RevenueSeller.objects.filter(seller=request.user, date__range=[start_date, end_date])
 	payment_amount = revenue_seller_objs.aggregate(Sum('payment_amount'))['payment_amount__sum']
