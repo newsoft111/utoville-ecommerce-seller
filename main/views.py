@@ -13,7 +13,7 @@ def index(request):
 
 	q = Q()
 	q &= Q(product__user=request.user)
-	q &= Q(is_responded=True)
+	q &= Q(order__payment__is_paid = True)
 
 	order_items = OrderItem.objects.filter(q)
 	for items in order_items:

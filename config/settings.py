@@ -75,6 +75,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+				'qna.context_processors.counter_new_qna',
 				'order.context_processors.counter_new_order',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',

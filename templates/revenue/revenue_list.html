@@ -85,13 +85,14 @@
 								</tbody>
 							</table><!-- end table --> 
 						</div>	
-						<!-- paging -->
-						<!-- <div class="row g-0 text-center text-sm-start">
+						
+						<div class="row g-0 mt-3 text-center text-sm-start">
+							<!-- end col -->
 							<div class="col-12">
 								<ul class="pagination pagination-rounded justify-content-center mb-sm-0">
-									{% if product_list.has_previous %}
+									{% if revenue_seller_objs.has_previous %}
 									<li class="page-item">
-										<a href="?p={{product_list.previous_page_number }}" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
+										<a href="?p={{revenue_seller_objs.previous_page_number }}" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
 									</li>
 									{% else %}
 									<li class="page-item disabled">
@@ -99,9 +100,9 @@
 									</li>
 									{% endif %}
 									
-									{% for page_number in product_list.paginator.page_range %}
-										{% if page_number >= product_list.number|add:-2 and page_number <= product_list.number|add:2 %}
-											{% if page_number == product_list.number %}
+									{% for page_number in revenue_seller_objs.paginator.page_range %}
+										{% if page_number >= revenue_seller_objs.number|add:-2 and page_number <= revenue_seller_objs.number|add:2 %}
+											{% if page_number == revenue_seller_objs.number %}
 											<li class="page-item active">
 												<span class="page-link">{{ page_number }}</span>
 											</li>
@@ -113,9 +114,9 @@
 										{% endif %}
 									{% endfor %}
 									
-									{% if product_list.has_next  %}
+									{% if revenue_seller_objs.has_next  %}
 									<li class="page-item">
-										<a href="?p={{product_list.next_page_number }}" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
+										<a href="?p={{revenue_seller_objs.next_page_number }}" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
 									</li>
 									{% else %}
 									<li class="page-item disabled">
@@ -123,8 +124,9 @@
 									</li>
 									{% endif %}
 								</ul>
-							</div>
-						</div> -->
+							</div><!-- end col -->
+						</div><!-- end row -->
+
 					</div>
 				</div>
 			</div>
