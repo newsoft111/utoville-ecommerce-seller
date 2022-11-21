@@ -58,7 +58,6 @@ def profit_export(request):
 		'payment_fee', 
 		'profit_amount',
 	)
-	print(profit_objs)
 
 	file_name = urllib.parse.quote(str(f"{request.user.username} 매출").encode('utf-8'))
 
@@ -80,7 +79,6 @@ def profit_export(request):
 	for profit_obj in profit_objs:
 		row_num +=1
 		for col_num, attr in enumerate(profit_obj):
-			print(attr)
 			ws.write(row_num, col_num, str(attr))
 					
 	wb.save(response)
