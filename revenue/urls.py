@@ -5,4 +5,5 @@ app_name = 'revenue'
 
 urlpatterns = [
 	path('', views.revenue_list, name='list'),
+	path('export/', views.revenue_export, name='export'),
 ]
