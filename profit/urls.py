@@ -5,4 +5,5 @@ app_name = 'profit'
 
 urlpatterns = [
 	path('', views.profit_list, name='list'),
+	path('export/', views.profit_export, name='export'),
 ]
