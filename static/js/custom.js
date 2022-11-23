@@ -90,3 +90,19 @@ function serialize (rawData) {
 	
 	return rtnData;
 }
+
+// 이메일 정규표현식
+function email_check(email) {
+    let regex=/([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    return (email != '' && email != 'undefined' && regex.test(email));   // 정규표현식 검사를 통과하면 true를 리턴
+}
+// 계좌번호 정규표현식
+function account_check(number) {
+	let regex = /^[0-9]{4}[-\s\.]?[0-9]{4}[-\s\.]?[0-9]{4}[-\s\.]?[0-9]{4}$/;  //(임시) 카드번호 4자리-4자리-4자리-4자리 유형 체크
+	return (number != '' &&  number != 'undefined' && regex.test(number));
+}
+// 비밀번호 정규표현식
+function password_check(number) {
+	let regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/;
+	return (number != '' &&  number != 'undefined' && regex.test(number));
+}

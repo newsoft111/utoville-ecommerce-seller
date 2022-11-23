@@ -13,9 +13,7 @@ urlpatterns = [
 	#path('re/verify/email/', views.re_verify, name='re_verify'),
 	path('mypage/',
 		include([
-			path('orders/', views.my_order, name='my_order'),
-			path('subs/', views.subscription, name='subscription'),
-			path('cancel/', views.cancel, name='cancel'),
+			path('', views.my_profile, name='profile'),
 		])
 	)
 ]
