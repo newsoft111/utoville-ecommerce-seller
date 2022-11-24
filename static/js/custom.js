@@ -94,7 +94,8 @@ function serialize (rawData) {
 function numberWithCommas(num) { 
 	var parts = num.toString().split("."); 
 	return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : ""); 
-	
+}
+
 // 이메일 정규표현식
 function email_check(email) {
     let regex=/([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
