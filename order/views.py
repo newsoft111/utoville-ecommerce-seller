@@ -8,8 +8,11 @@ from datetime import datetime, timedelta, date
 from django.views.generic import View
 import pandas as pd
 import json
-from .util import update_status
+from util.views import cache
+
 # Create your views here.
+
+
 
 @login_required(login_url="account:login")
 def order_list(request):
@@ -47,6 +50,48 @@ def order_edit_status(request):
 	return JsonResponse(result)
 	
 
+def update_status(query_set, event_type):
+	if event_type == '배달완료':
+		query_set.update(
+			is_delivered = True, 
+			delivered_at = datetime.now(),
+			order_item_status = '배달완료'
+		)
+		return {
+			'result': '200',
+			'result_text': '수정이 완료되었습니다.'
+		}
+
+	elif event_type == '주문취소요청':
+		query_set.update(
+			is_refund_requested = True, 
+			refund_requested_at = datetime.now(),
+			order_item_status = '주문취소요청'
+		)
+		return {
+			'result': '200',
+			'result_text': '수정이 완료되었습니다.'
+		}
+
+	elif event_type == '주문접수':
+		query_set.update(
+			is_responded = True, 
+			responded_at = datetime.now(),
+			order_item_status = '주문접수'
+		)
+
+		return {
+			'result': '200',
+			'result_text': '접수가 완료되었습니다.'
+		}
+
+
+	else:
+		return {
+			'result': '201',
+			'result_text': '알수 없는 오류입니다. 다시시도 해주세요.'
+		}
+
 
 class OrderPreview(View):
 	def get(self, request):
@@ -55,30 +100,46 @@ class OrderPreview(View):
 		q = Q()
 		q &= Q(product__user=request.user)
 		q &= Q(order__payment__is_paid = True)
-		if request.POST.get('start_date'):
-			self.start_date = datetime.strptime(request.GET.get("start_date"), "%Y-%m-%d")
-		else:
-			self.start_date = self.end_date - timedelta(days=7)
+
+		self.start_date = self.end_date - timedelta(days=7)
 		q &= Q(order__payment__paid_at__range = [self.start_date, self.end_date])
 
-		order_items = OrderItem.objects.filter(q)
-
+		order_items_cache = cache.get(f'{request.user}_order_items')
+		if order_items_cache is not None:
+			order_items = order_items_cache
+		else:
+			order_items = OrderItem.objects.filter(q)
+		
+		#월별
 		if request.GET.get('standard') == 'Monthly':
 			self.date_format = "%b"
 			chart_data = self.monthly()
+			#cache_data = cache.get(f'{request.user}_monthly')
+			#if cache_data is not None:
+			#	chart_data = cache_data
+			#else:
+			#	cache.put(f'{request.user}_monthly', chart_data)
+		
+		#일별
 		else:
 			self.date_format = "%a"
 			chart_data = self.weekly()
+			#cache_data = cache.get(f'{request.user}_weekly')
+			#if cache_data is not None:
+			#	chart_data = cache_data
+			#else:
+				
+			#	cache.put(f'{request.user}_weekly', chart_data)
+
 
 		total_price = 0
 		for items in order_items:
 			chart_data[items.order.payment.paid_at.strftime(self.date_format)] += 1
 			total_price += items.sub_total_price()
 			
-			
 		return JsonResponse({
 			"chart_data": [{"x": key, "y": value} for key, value in chart_data.items()],
-			'count': order_items.count()
+			'count': format(order_items.count(), ',')
 		})
 
 	def weekly(self):

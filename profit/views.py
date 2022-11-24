@@ -6,9 +6,12 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponse
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from django.views.generic import View
 import json, re
 import urllib
 import xlwt
+from decimal import Decimal
+from util.views import cache
 
 def profit_list(request):
 	profit_objs = Profit.objects.filter(seller=request.user, profit_done=None)
@@ -84,3 +87,51 @@ def profit_export(request):
 	wb.save(response)
 	
 	return response
+
+
+
+class ProfitPreview(View):
+	def get(self, request):
+		profit_objs = Profit.objects.filter(seller=request.user, profit_done=None)
+		profit_amount = profit_objs.aggregate(Sum('profit_amount'))['profit_amount__sum']
+		if profit_amount is None:
+			profit_amount = 0
+
+		
+		self.start_date = datetime.now() - relativedelta(months=1)
+		self.end_date = datetime.now() + timedelta(1)
+
+		q = Q()
+		q &= Q(seller=request.user)
+		q &= Q(created_at__range=[self.start_date, self.end_date])
+
+
+		profit_items_cache = cache.get(f'{request.user}_profit_items')
+		if profit_items_cache is not None:
+			profit_done_objs = profit_items_cache
+		else:
+			profit_done_objs = ProfitDone.objects.filter(q)
+		
+		
+		self.date_format = "%b"
+		chart_data = self.monthly()
+
+
+		for items in profit_done_objs:
+			chart_data[items.created_at.strftime(self.date_format)] += items.profit_done_amount
+			
+		return JsonResponse({
+			"chart_data": [{"x": key, "y": value} for key, value in chart_data.items()],
+			'profit_amount': '{0:,}'.format(profit_amount)
+		})
+
+
+	def monthly(self):
+		preview_data = {}
+		month_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+		for month in month_list:
+			preview_data[month] = 0
+
+		return preview_data
+
