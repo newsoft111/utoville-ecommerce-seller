@@ -8,5 +8,4 @@ def counter_new_order(request):
 	q &= Q(product__user = request.user)
 	q &= Q(order__payment__is_paid = True)
 	result = OrderItem.objects.filter(q).count()
-	print(result)
 	return {'counter_new_order':  result}
