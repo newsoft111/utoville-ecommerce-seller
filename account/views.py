@@ -258,12 +258,5 @@ def send_auth_mail(email):
 	else:
 		return False
 
-
-def my_order(request):
-	return render(request, 'account/mypage/my_order.html')
-
-def subscription(request):
-	return render(request, 'account/mypage/subscription.html')
-
-def cancel(request):
-	return render(request, 'account/mypage/cancel.html')
+def my_profile(request):
+	return render(request, 'account/my_profile.html')
