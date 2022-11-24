@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+
+<style>
+</style>
+<div class="page-content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class=" d-flex flex-column h-100">
+						<div class="card-header justify-content-between d-flex align-items-center">
+							<h5 class="card-title">정보 수정</h5>
+						</div>
+						<div class="card shadow p-3 mb-3">
+							<form autocomplete="false">
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label class="form-label" for="profile_name">Name</label>
+										<input class="blockquote custom-blockquote blockquote-outline-secondary form-control" id="profile_name" type="text" value="이름 혹은 업체명" readonly>
+									</div>
+									<div class="col-md-6 mb-3">
+										<label class="form-label" for="profile_phon">Phone</label>
+										<input class=" blockquote custom-blockquote blockquote-outline-secondary form-control" id="profile_phon" type="text" value="+34 1234 567 890" readonly >
+									</div>
+									<div class="authenticationArea text-end">
+										<button type="button" class="authenticationBtn btn btn-light" data-bs-toggle="modal"
+										data-bs-target="#exampleModalScrollable">재인증하기</button>
+									</div>
+									
+									<div class="col-md-6 mb-3 emailInputArea">
+										<label class="form-label" for="profile_email">Email address</label>
+										<input class="blockquote custom-blockquote blockquote-outline-success rounded mb-0 form-control" type="email" id="profile_email"
+											placeholder="email@emile.com">
+									</div>
+									<div class="col-md-6 mb-3 accountInputArea">
+										<label class="form-label" for="profile_dob">Account Number</label>
+										<input type="text" id="profile_dob" class="blockquote custom-blockquote blockquote-outline-success rounded mb-0 form-control">
+									</div>
+									<div class="col-12 mb-4">
+										<label for="profile_address" class="form-label">Address</label>
+										<input type="text" id="profile_address" class="blockquote custom-blockquote blockquote-outline-success form-control"
+											value="1355 Market St, Suite 900 San Francisco CA 94103">
+									</div>
+								</div>
+								<div class="text-end">
+									<button type="button" class="btn btn-light" id="profileSaveBtn">Save changes</button>
+								</div>
+							</form>
+						</div>
+
+						<!--Password card-->
+						<div class="card shadow p-3">
+							<h5 class="mb-4">Update password</h5>
+
+							<form>
+								<div class="row">
+									<div class="col-md-4 mb-3">
+										<label for="update_pass_current" class="form-label">Current password</label>
+										<input id="update_pass_current" type="password" class="blockquote custom-blockquote blockquote-outline-success form-control">
+									</div>
+									<div class="col-md-4 mb-3 passNewArea">
+										<label for="update_pass_new" class="form-label">New password</label>
+										<input type="password" class="blockquote custom-blockquote blockquote-outline-success form-control" id="update_pass_new">
+									</div>
+									<div class="col-md-4 mb-3 passConfirmArea">
+										<label for="update_pass_new_confirm" class="form-label">Confirm new password</label>
+										<input type="password" class="blockquote custom-blockquote blockquote-outline-success form-control" id="update_pass_new_confirm">
+									</div>
+								</div>
+								<small class="help-text text-muted">Password must be at least 8 character and
+									contain symbols</small>
+								<div class="text-end">
+									<button id="passwordUpdateBtn" type="button" class="btn btn-light">Save updated password</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalScrollableTitle">휴대폰 인증</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close">
+				</button>
+			</div>
+			<div class="modal-body">
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-light"
+					data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div>
+
+<script>
+/*정보수정 변수*/
+let emailInputArea = document.querySelector(".emailInputArea");
+let accountInputArea = document.querySelector(".accountInputArea");
+let profileEmail = document.getElementById("profile_email");
+let profileSaveBtn = document.getElementById("profileSaveBtn");
+let profileDob = document.getElementById("profile_dob");
+
+/*비밀번호 변경 변수*/
+let updatePassNew = document.getElementById("update_pass_new");
+let updatePassNewConfirm = document.getElementById("update_pass_new_confirm");
+let passwordUpdateBtn = document.getElementById("passwordUpdateBtn");
+let passNewArea = document.querySelector(".passNewArea");
+let passConfirmArea = docume
+
+
+
+nt.querySelector(".passConfirmArea");
+
+/*이메일, 계좌번호 입력 검사*/
+profileSaveBtn.addEventListener("click", function(){
+	if(! email_check(profileEmail.value)){
+		let html = `<label class="form-label" for="profile_email">Email address</label>
+		<input class="blockquote custom-blockquote blockquote-outline-danger mb-0 form-control" type="email" id="profile_email">
+		<span class="text-danger">이메일을 정확히 입력하세요.</span>`;
+
+		emailInputArea.innerHTML = html;
+	
+	}
+
+	if(! account_check(Number(profileDob.value))){
+		let html = `<label class="form-label" for="profile_dob">Account Number</label>
+		<input type="text" id="profile_dob" class="blockquote custom-blockquote blockquote-outline-danger mb-0 form-control">
+		<span class="text-danger">계좌번호를 정확히 입력하세요.</span>`;
+
+		accountInputArea.innerHTML = html;
+	}
+});
+
+/*새로운 비밀번호 같은지 검사*/
+passwordUpdateBtn.addEventListener("click", function(){
+	if(updatePassNew.value != updatePassNewConfirm.value) {
+		let html = `<label for="update_pass_new_confirm" class="form-label">Confirm new password</label>
+		<input type="password" class="blockquote custom-blockquote blockquote-outline-danger mb-0 form-control" id="update_pass_new_confirm">
+		<span class="text-danger">비밀번호가 다릅니다.</span>`;
+
+		passConfirmArea.innerHTML = html;
+	}
+
+	if(updatePassNew.length < 10 || ! password_check(updatePassNew.value)) {
+		let html = `<label for="update_pass_new" class="form-label">New password</label>
+		<input type="password" class="blockquote custom-blockquote blockquote-outline-danger mb-0 form-control" id="update_pass_new">
+		<span class="text-danger">최소 8글자 이상, 숫자, 특수문자 포함 필수</span>`;
+
+		passNewArea.innerHTML = html;
+	} 
+});
+</script>
+{% endblock %}
