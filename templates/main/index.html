@@ -3,11 +3,20 @@
 {% load static %}
 {% load humanize %}
 
-<!-- Begin page -->
+<style>
+.fc-daygrid-day-bottom {
+	margin-top: 3px !important;
+	margin-left: 3px;
+}
+a.fc-daygrid-more-link, .fc-timegrid-more-link-inner {
+	font-size: 14px;
+	font-weight: bold;
+	color: #000 !important;
+}
+</style>
 
 <div class="page-content">
 	<div class="container-fluid">
-		<!-- start page title -->
 		<div class="row">
 			<div class="col-12">
 				<div class="page-title-box d-flex align-items-center justify-content-between">
@@ -15,7 +24,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- end page title -->
 		<div class="row">
 			<div class="col-lg-8">
 				<div class="card">
@@ -109,10 +117,8 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- container-fluid -->
 </div>
-<!-- End Page-content -->
+
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
 let is_run = false;
@@ -161,7 +167,7 @@ async function edit_order_status_sumit() {
 	});
 }
 
-
+/*Order Charts*/
 var order_chart_options={
 	series:[{
 		name:"주문수",
@@ -213,7 +219,7 @@ async function get_order_preview_data(value) {
 get_order_preview_data();
 
 
-
+/*Profit Charts*/
 var profit_chart_options={
 	series:[{
 		name:"정산금액",
@@ -264,7 +270,7 @@ async function get_profit_preview_data(value) {
 }
 get_profit_preview_data();
 
-
+/*Mainpage Caledar*/
 var order_data_calendar = {{ order_data_calendar|safe }}
 document.addEventListener("DOMContentLoaded", function() {
 	let my_modal = document.querySelector("#scheduleModal");
@@ -287,6 +293,8 @@ document.addEventListener("DOMContentLoaded", function() {
         return 768 <= window.innerWidth && window.innerWidth < 1200 ? "timeGridWeek" : window.innerWidth <= 768 ? "listMonth" : "dayGridMonth"
     }
     var m = new FullCalendar.Calendar(r, {
+		dayMaxEvents: 5,
+		eventMaxStack: 2,
         timeZone: "local",
 		contentHeight: 'auto',
         initialView: c(),

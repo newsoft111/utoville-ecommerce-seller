@@ -4,88 +4,96 @@
 {% load humanize %}
 
 <style>
+.pass-change-area {
+	display: none;
+}
 </style>
 <div class="page-content">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-12">
-				<div class="card">
-					<div class=" d-flex flex-column h-100">
-						<div class="card-header justify-content-between d-flex align-items-center">
-							<h5 class="card-title">정보 수정</h5>
+	<div class="container-fluid mx-auto">
+		<form>
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="card-title">기본 정보</h4>
 						</div>
-						<div class="card shadow p-3 mb-3">
-							<form autocomplete="false">
-								<div class="row">
-									<div class="col-md-6 mb-3">
-										<label class="form-label" for="profile_name">Name</label>
-										<input class="blockquote custom-blockquote blockquote-outline-secondary form-control" id="profile_name" type="text" value="이름 혹은 업체명" readonly>
-									</div>
-									<div class="col-md-6 mb-3">
-										<label class="form-label" for="profile_phon">Phone</label>
-										<input class=" blockquote custom-blockquote blockquote-outline-secondary form-control" id="profile_phon" type="text" value="+34 1234 567 890" readonly >
-									</div>
-									<div class="authenticationArea text-end">
-										<button type="button" class="authenticationBtn btn btn-light" data-bs-toggle="modal"
-										data-bs-target="#exampleModalScrollable">재인증하기</button>
-									</div>
-									
-									<div class="col-md-6 mb-3 emailInputArea">
-										<label class="form-label" for="profile_email">Email address</label>
-										<input class="blockquote custom-blockquote blockquote-outline-success rounded mb-0 form-control" type="email" id="profile_email"
-											placeholder="email@emile.com">
-									</div>
-									<div class="col-md-6 mb-3 accountInputArea">
-										<label class="form-label" for="profile_dob">Account Number</label>
-										<input type="text" id="profile_dob" class="blockquote custom-blockquote blockquote-outline-success rounded mb-0 form-control">
-									</div>
-									<div class="col-12 mb-4">
-										<label for="profile_address" class="form-label">Address</label>
-										<input type="text" id="profile_address" class="blockquote custom-blockquote blockquote-outline-success form-control"
-											value="1355 Market St, Suite 900 San Francisco CA 94103">
+						<div class="card-body">
+							<div class="mb-3 row">
+								<label for="profile_id" class="col-md-2 col-form-label">ID</label>
+								<div class="col-md-10">
+									<input class="bg-white border-0 form-control" id="profile_id" value="seller_id" readonly>
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<label for="update_pass_current" class="col-md-2 col-form-label">Password</label>
+								<div class="col-md-10">
+									<input id="update_pass_current" type="password" class="bg-white border-0 form-control" value="sellerpassword" readonly>
+									<span class="btn-pass-change btn btn-primary my-2" style="margin-left:0.75em;">변경</span>
+									<div class="pass-change-area">
+										<div class="mb-3 new-pass-zone">
+											<label for="update_pass_new" class="form-label">New password</label>
+											<input type="password" class="form-control" id="update_pass_new">
+										</div>
+										<div class="mb-3 confrim-pass-zone">
+											<label for="update_pass_new_confirm" class="form-label">Confirm new password</label>
+											<input type="password" class="form-control" id="update_pass_new_confirm">
+										</div>
 									</div>
 								</div>
-								<div class="text-end">
-									<button type="button" class="btn btn-light" id="profileSaveBtn">Save changes</button>
+							</div>
+							<div class="mb-3 row">
+								<label for="profile_name" class="col-md-2 col-form-label">판매 담당자명</label>
+								<div class="col-md-10">
+									<input class="form-control" type="search" value="seller name" id="profile_name">
 								</div>
-							</form>
+							</div>
+							<div class="mb-3 row">
+								<label for="profile_tel" class="col-md-2 col-form-label">판매 담당자 연락처</label>
+								<div class="col-md-10">
+									<input class="form-control" type="tel" value="1-(555)-555-5555" placeholder="Enter Telephone"
+										id="profile_tel">
+								</div>
+							</div>
 						</div>
-
-						<!--Password card-->
-						<div class="card shadow p-3">
-							<h5 class="mb-4">Update password</h5>
-
-							<form>
-								<div class="row">
-									<div class="col-md-4 mb-3">
-										<label for="update_pass_current" class="form-label">Current password</label>
-										<input id="update_pass_current" type="password" class="blockquote custom-blockquote blockquote-outline-success form-control">
-									</div>
-									<div class="col-md-4 mb-3 passNewArea">
-										<label for="update_pass_new" class="form-label">New password</label>
-										<input type="password" class="blockquote custom-blockquote blockquote-outline-success form-control" id="update_pass_new">
-									</div>
-									<div class="col-md-4 mb-3 passConfirmArea">
-										<label for="update_pass_new_confirm" class="form-label">Confirm new password</label>
-										<input type="password" class="blockquote custom-blockquote blockquote-outline-success form-control" id="update_pass_new_confirm">
-									</div>
+						<div class="card-header">
+							<h4 class="card-title">정산 정보</h4>
+						</div>
+						<div class="card-body">
+							<div class="mb-3 row">
+								<label class="col-md-2 col-form-label">Bank</label>
+								<div class="col-md-10">
+									<select class="form-select">
+										<option>Select</option>
+										<option>bank1</option>
+										<option>bank2</option>
+									</select>
 								</div>
-								<small class="help-text text-muted">Password must be at least 8 character and
-									contain symbols</small>
-								<div class="text-end">
-									<button id="passwordUpdateBtn" type="button" class="btn btn-light">Save updated password</button>
+							</div>
+							<div class="mb-3 row">
+								<label for="account-holder" class="col-md-2 col-form-label">Account Holder</label>
+								<div class="col-md-10">
+									<input class="form-control" type="text" value=""  placeholder="Enter Number" id="account-holder">
 								</div>
-							</form>
+							</div>
+							<div class="mb-3 row">
+								<label for="account-number-input" class="col-md-2 col-form-label">Account Number</label>
+								<div class="col-md-10 accountInputArea">
+									<input class="form-control" type="text" value=""  placeholder="Enter Number" id="account-number-input">
+								</div>
+							</div>
+							<div class="text-end">
+								<button type="button" class="btn btn-primary" id="profileSaveBtn">Save changes</button>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</form>
 	</div>
 </div>
 
 
-<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+<!-- <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -102,66 +110,58 @@
 					data-bs-dismiss="modal">Close</button>
 				<button type="button" class="btn btn-primary">Save changes</button>
 			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal-dialog -->
-</div>
+		</div>
+	</div>
+</div> -->
 
 <script>
+let btnPassChange = document.querySelector(".btn-pass-change");
+
+btnPassChange.addEventListener("click", function(){
+	document.querySelector(".pass-change-area").classList.toggle("d-block")
+});
+
 /*정보수정 변수*/
-let emailInputArea = document.querySelector(".emailInputArea");
+
 let accountInputArea = document.querySelector(".accountInputArea");
-let profileEmail = document.getElementById("profile_email");
+let accountNumberInput = document.getElementById("account-number-input");
 let profileSaveBtn = document.getElementById("profileSaveBtn");
-let profileDob = document.getElementById("profile_dob");
 
 /*비밀번호 변경 변수*/
+let passChangeArea = document.querySelector(".pass-change-area");
 let updatePassNew = document.getElementById("update_pass_new");
 let updatePassNewConfirm = document.getElementById("update_pass_new_confirm");
-let passwordUpdateBtn = document.getElementById("passwordUpdateBtn");
-let passNewArea = document.querySelector(".passNewArea");
-let passConfirmArea = docume
-
-
-
-nt.querySelector(".passConfirmArea");
+let newPassZone = document.querySelector(".new-pass-zone");
+let confrimPassZone = document.querySelector(".confrim-pass-zone");
 
 /*이메일, 계좌번호 입력 검사*/
 profileSaveBtn.addEventListener("click", function(){
-	if(! email_check(profileEmail.value)){
-		let html = `<label class="form-label" for="profile_email">Email address</label>
-		<input class="blockquote custom-blockquote blockquote-outline-danger mb-0 form-control" type="email" id="profile_email">
-		<span class="text-danger">이메일을 정확히 입력하세요.</span>`;
-
-		emailInputArea.innerHTML = html;
-	
-	}
-
-	if(! account_check(Number(profileDob.value))){
-		let html = `<label class="form-label" for="profile_dob">Account Number</label>
-		<input type="text" id="profile_dob" class="blockquote custom-blockquote blockquote-outline-danger mb-0 form-control">
+	if(! account_check(Number(accountNumberInput.value))){
+		let html = `<input class="form-control" style="border-color: red;" type="text" value=""  placeholder="Enter Number" id="account-number-input">
 		<span class="text-danger">계좌번호를 정확히 입력하세요.</span>`;
 
 		accountInputArea.innerHTML = html;
 	}
-});
 
-/*새로운 비밀번호 같은지 검사*/
-passwordUpdateBtn.addEventListener("click", function(){
-	if(updatePassNew.value != updatePassNewConfirm.value) {
-		let html = `<label for="update_pass_new_confirm" class="form-label">Confirm new password</label>
-		<input type="password" class="blockquote custom-blockquote blockquote-outline-danger mb-0 form-control" id="update_pass_new_confirm">
-		<span class="text-danger">비밀번호가 다릅니다.</span>`;
+	/*새로운 비밀번호 같은지 검사*/
 
-		passConfirmArea.innerHTML = html;
+	if(passChangeArea.classList.contains("d-block")){
+
+		if(updatePassNew.value != updatePassNewConfirm.value) {
+			let html = `<input type="password" style="border-color: red;" class="form-control" id="update_pass_new_confirm">
+			<span class="text-danger">비밀번호가 다릅니다.</span>`;
+	
+			confrimPassZone.innerHTML = html;
+		}
+	
+		if(updatePassNew.length < 10 || ! password_check(updatePassNew.value)) {
+			let html = `<input type="password" style="border-color: red;" class="form-control" id="update_pass_new">
+			<span class="text-danger">최소 8글자 이상, 숫자, 특수문자 포함 필수</span>`;
+	
+			newPassZone.innerHTML = html;
+		} 
 	}
-
-	if(updatePassNew.length < 10 || ! password_check(updatePassNew.value)) {
-		let html = `<label for="update_pass_new" class="form-label">New password</label>
-		<input type="password" class="blockquote custom-blockquote blockquote-outline-danger mb-0 form-control" id="update_pass_new">
-		<span class="text-danger">최소 8글자 이상, 숫자, 특수문자 포함 필수</span>`;
-
-		passNewArea.innerHTML = html;
-	} 
 });
+
 </script>
 {% endblock %}
