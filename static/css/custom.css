@@ -59,3 +59,50 @@
 	text-decoration: underline;
 	text-underline-position: under;
 }
+
+@media only screen and (max-width: 767px) {
+	.responsiveTable {
+		border: 0;
+	}
+
+	.responsiveTable caption {
+		font-size: 1.3em;
+	}
+
+	.responsiveTable thead {
+		border: none;
+		clip: rect(0 0 0 0);
+		height: 1px;
+		margin: -1px;
+		overflow: hidden;
+		padding: 0;
+		position: absolute;
+		width: 1px;
+	}
+
+	.responsiveTable tr:first-child {
+		border-top: 3px solid #ddd;
+	}
+
+	.responsiveTable tr {
+		border-bottom: 3px solid #ddd;
+		display: block;
+		margin-bottom: .625em;
+	}
+
+	.responsiveTable td {
+		border-bottom: 1px solid #ddd;
+		display: block;
+		text-align: right;
+	}
+
+	.responsiveTable td::before {
+		content: attr(data-label);
+		float: left;
+		font-weight: bold;
+	}
+
+	.responsiveTable td:last-child {
+		border-bottom: 0;
+	}
+}
