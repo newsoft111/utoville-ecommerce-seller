@@ -1,6 +1,6 @@
 node {
 	stage('Build') {
-        if (env.BRANCH_NAME == 'master') {
+        if (env.BRANCH_NAME == 'main') {
 			stage('Clone repository') {
 				checkout scm
 			}
