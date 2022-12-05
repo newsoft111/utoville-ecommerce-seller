@@ -135,3 +135,5 @@ class ProfitPreview(View):
 
 		return preview_data
 
+def profit_catalog(request):
+	return render(request, 'profit/profit_catalog.html')
