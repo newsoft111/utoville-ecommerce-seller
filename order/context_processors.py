@@ -3,7 +3,7 @@ from django.db.models import Q
 
 
 def counter_new_order(request):
-	if request.user.is_authenticated: #로그인 상태면
+	if request.user.is_authenticated:
 		q = Q()
 		q &= Q(is_responded=False)
 		q &= Q(product__user = request.user)

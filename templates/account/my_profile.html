@@ -10,7 +10,7 @@
 </style>
 <div class="page-content">
 	<div class="container-fluid mx-auto">
-		<form>
+		<form name="updateUserForm">
 			<div class="row">
 				<div class="col-12">
 					<div class="card">
@@ -20,37 +20,37 @@
 						<div class="card-body">
 							<div class="mb-3 row">
 								<label for="profile_id" class="col-md-2 col-form-label">ID</label>
-								<div class="col-md-10">
-									<input class="bg-white border-0 form-control" id="profile_id" value="seller_id" readonly>
-								</div>
+								<label class="col-md-10 col-form-label">{{request.user.username}}</label>
 							</div>
 							<div class="mb-3 row">
-								<label for="update_pass_current" class="col-md-2 col-form-label">Password</label>
+								<label class="col-md-2 col-form-label">Password</label>
 								<div class="col-md-10">
-									<input id="update_pass_current" type="password" class="bg-white border-0 form-control" value="sellerpassword" readonly>
+									<input type="password" class="form-control" name="password" value="">
+
 									<span class="btn-pass-change btn btn-primary my-2" style="margin-left:0.75em;">변경</span>
 									<div class="pass-change-area">
 										<div class="mb-3 new-pass-zone">
 											<label for="update_pass_new" class="form-label">New password</label>
-											<input type="password" class="form-control" id="update_pass_new">
+											<input type="password" class="form-control" id="update_pass_new" value="" name="new_password">
 										</div>
 										<div class="mb-3 confrim-pass-zone">
 											<label for="update_pass_new_confirm" class="form-label">Confirm new password</label>
-											<input type="password" class="form-control" id="update_pass_new_confirm">
+											<input type="password" class="form-control" id="update_pass_new_confirm" value="" name="new_password2">
 										</div>
 									</div>
+
 								</div>
 							</div>
 							<div class="mb-3 row">
 								<label for="profile_name" class="col-md-2 col-form-label">판매 담당자명</label>
 								<div class="col-md-10">
-									<input class="form-control" type="search" value="seller name" id="profile_name">
+									<input class="form-control" type="search" value="{{request.user.mb_name}}" name="mb_name" id="profile_name">
 								</div>
 							</div>
 							<div class="mb-3 row">
 								<label for="profile_tel" class="col-md-2 col-form-label">판매 담당자 연락처</label>
 								<div class="col-md-10">
-									<input class="form-control" type="tel" value="1-(555)-555-5555" placeholder="Enter Telephone"
+									<input class="form-control" type="tel" value="{{request.user.mb_phone}}" name="mb_phone" placeholder="Enter Telephone"
 										id="profile_tel">
 								</div>
 							</div>
@@ -72,13 +72,13 @@
 							<div class="mb-3 row">
 								<label for="account-holder" class="col-md-2 col-form-label">Account Holder</label>
 								<div class="col-md-10">
-									<input class="form-control" type="text" value=""  placeholder="Enter Number" id="account-holder">
+									<input class="form-control" type="text" value="11"  placeholder="Enter Number" id="account-holder">
 								</div>
 							</div>
 							<div class="mb-3 row">
 								<label for="account-number-input" class="col-md-2 col-form-label">Account Number</label>
 								<div class="col-md-10 accountInputArea">
-									<input class="form-control" type="text" value=""  placeholder="Enter Number" id="account-number-input">
+									<input class="form-control" type="text" placeholder="Enter Number" value="1111-1111-1111-1111" id="account-number-input">
 								</div>
 							</div>
 							<div class="text-end">
@@ -115,6 +115,7 @@
 </div> -->
 
 <script>
+let is_run = false;
 let btnPassChange = document.querySelector(".btn-pass-change");
 
 btnPassChange.addEventListener("click", function(){
@@ -136,22 +137,24 @@ let confrimPassZone = document.querySelector(".confrim-pass-zone");
 
 /*이메일, 계좌번호 입력 검사*/
 profileSaveBtn.addEventListener("click", function(){
-	if(! account_check(Number(accountNumberInput.value))){
+	/*if(! account_check(Number(accountNumberInput.value))){
 		let html = `<input class="form-control" style="border-color: red;" type="text" value=""  placeholder="Enter Number" id="account-number-input">
 		<span class="text-danger">계좌번호를 정확히 입력하세요.</span>`;
 
 		accountInputArea.innerHTML = html;
-	}
+		return false;
+	}*/
 
 	/*새로운 비밀번호 같은지 검사*/
 
-	if(passChangeArea.classList.contains("d-block")){
+	/*if(passChangeArea.classList.contains("d-block")){
 
 		if(updatePassNew.value != updatePassNewConfirm.value) {
 			let html = `<input type="password" style="border-color: red;" class="form-control" id="update_pass_new_confirm">
 			<span class="text-danger">비밀번호가 다릅니다.</span>`;
 	
 			confrimPassZone.innerHTML = html;
+			return false;
 		}
 	
 		if(updatePassNew.length < 10 || ! password_check(updatePassNew.value)) {
@@ -159,9 +162,39 @@ profileSaveBtn.addEventListener("click", function(){
 			<span class="text-danger">최소 8글자 이상, 숫자, 특수문자 포함 필수</span>`;
 	
 			newPassZone.innerHTML = html;
+			return false;
 		} 
-	}
+	}*/
+	update_user_submit();
 });
 
+async function update_user_submit() {
+	if(is_run == true) {
+		openModal('알림','잠시후에 다시시도 해주세요.');
+		return false;
+	}
+
+    is_run = true;
+
+	let form_data = new FormData(document.querySelector('form[name=updateUserForm]'));
+
+    const response = await fetch("{{request.path}}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: form_data
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        is_run  = false;
+        if (data.result == '200') {
+            openModal("알림", data.result_text, '', 'reload');
+        } else {
+            openModal("알림", data.result_text, '');
+        }
+    });
+}
 </script>
 {% endblock %}

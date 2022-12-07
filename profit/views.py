@@ -13,6 +13,7 @@ import xlwt
 from decimal import Decimal
 from util.views import cache
 
+@login_required(login_url="account:login")
 def profit_list(request):
 	profit_objs = Profit.objects.filter(seller=request.user, profit_done=None)
 	profit_amount = profit_objs.aggregate(Sum('profit_amount'))['profit_amount__sum']
