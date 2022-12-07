@@ -10,5 +10,5 @@ def counter_new_order(request):
 		q &= Q(order__payment__is_paid = True)
 		result = OrderItem.objects.filter(q).count()
 	else:
-		result = 0
+		result = None
 	return {'counter_new_order':  result}

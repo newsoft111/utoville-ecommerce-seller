@@ -9,5 +9,5 @@ def counter_new_qna(request):
 		q &= Q(answered_at = None)
 		result = ProductQnA.objects.filter(q).count()
 	else:
-		result = 0
+		result = None
 	return {'counter_new_qna':  result}
