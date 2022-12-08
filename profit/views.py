@@ -106,16 +106,18 @@ class ProfitPreview(View):
 		q &= Q(seller=request.user)
 		q &= Q(created_at__range=[self.start_date, self.end_date])
 
-
-		profit_items_cache = cache.get(f'{request.user}_profit_items')
-		if profit_items_cache is not None:
-			profit_done_objs = profit_items_cache
+		if request.GET.get('cache') == 'reload':
+			profit_done_objs = OrderItem.objects.filter(q)
 		else:
-			profit_done_objs = ProfitDone.objects.filter(q)
-		
-		
-		self.date_format = "%b"
-		chart_data = self.monthly()
+			profit_items_cache = cache.get(f'{request.user}_profit_items')
+			if profit_items_cache is not None:
+				profit_done_objs = profit_items_cache
+			else:
+				profit_done_objs = ProfitDone.objects.filter(q)
+			
+			
+			self.date_format = "%b"
+			chart_data = self.monthly()
 
 
 		for items in profit_done_objs:

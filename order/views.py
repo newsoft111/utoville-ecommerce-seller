@@ -104,11 +104,14 @@ class OrderPreview(View):
 		self.start_date = self.end_date - timedelta(days=7)
 		q &= Q(order__payment__paid_at__range = [self.start_date, self.end_date])
 
-		order_items_cache = cache.get(f'{request.user}_order_items')
-		if order_items_cache is not None:
-			order_items = order_items_cache
-		else:
+		if request.GET.get('cache') == 'reload':
 			order_items = OrderItem.objects.filter(q)
+		else:
+			order_items_cache = cache.get(f'{request.user}_order_items')
+			if order_items_cache is not None:
+				order_items = order_items_cache
+			else:
+				order_items = OrderItem.objects.filter(q)
 		
 		#월별
 		if request.GET.get('standard') == 'Monthly':
