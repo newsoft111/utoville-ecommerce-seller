@@ -61,7 +61,7 @@ a.fc-daygrid-more-link, .fc-timegrid-more-link-inner {
 							</div>
 						</div>
 						
-						<div>
+						<div id="order-preview-chart-div">
 							<div class="d-flex justify-content-between">
 								<div>
 									<h4 class="mt-2 font-weight-bold mb-2 d-flex align-items-center" id="order-preview-value"></h4>
@@ -101,7 +101,7 @@ a.fc-daygrid-more-link, .fc-timegrid-more-link-inner {
 						</div>
 						
 
-						<div>
+						<div id="profit-preview-chart-div">
 							<div class="d-flex justify-content-between">
 								<div>
 									<h4 class="mt-2 font-weight-bold mb-2 d-flex align-items-center" id="profit-preview-value"></h4>
@@ -237,10 +237,13 @@ async function get_order_preview_data(cache) {
 		cache = '';
 	}
 
-	value = document.querySelector("#order-reload-btn").dataset.value;
+	let value = document.querySelector("#order-reload-btn").dataset.value;
 
+	//드롭다운 엘리멘트
 	document.querySelector("span[id=order-preview-text]").innerHTML = `${value}<i class="mdi mdi-chevron-down ms-1"></i></span>`;
-	document.querySelector("#order-preview-chart").innerHTML = '';
+
+	let preview_div = document.querySelector("#order-preview-chart-div")
+	preview_div.className += ' d-none';
 
 	spinner = document.querySelector("#order-preview-chart-spinner");
 	spinner.classList.remove('d-none');
@@ -251,14 +254,14 @@ async function get_order_preview_data(cache) {
 	})
 	.then(response => response.json())
 	.then(data => {
-		spinner.className += ' d-none';
-
-		console.log(data.chart_data);
+		preview_div.classList.remove('d-none');
 		document.querySelector('h4[id=order-preview-value]').innerHTML = '총:' + data.count + '건';
 		order_chart.updateSeries([{
 			data: data.chart_data
 		}])
+		
 	});
+	spinner.className += ' d-none';
 	
 	
 	
@@ -310,10 +313,11 @@ async function get_profit_preview_data(cache) {
 		cache = '';
 	}
 
-	value = document.querySelector("#profit-reload-btn").dataset.value;
+	let value = document.querySelector("#profit-reload-btn").dataset.value;
 
 	//document.querySelector("span[id=order-preview-text]").innerHTML = `${value}<i class="mdi mdi-chevron-down ms-1"></i></span>`;
-	document.querySelector("#profit-preview-chart").innerHTML = '';
+	let preview_div = document.querySelector("#profit-preview-chart-div")
+	preview_div.className += ' d-none';
 
 	document.querySelector("#profit-preview-chart-spinner").classList.remove('d-none');
 
@@ -323,6 +327,7 @@ async function get_profit_preview_data(cache) {
 	})
 	.then(response => response.json())
 	.then(data => {
+		preview_div.classList.remove('d-none');
 		document.querySelector('h4[id=profit-preview-value]').innerHTML = '정산예정:' + data.profit_amount + '원';
 		profit_chart.updateSeries([{
 			data: data.chart_data
