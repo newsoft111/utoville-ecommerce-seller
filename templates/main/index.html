@@ -34,53 +34,82 @@ a.fc-daygrid-more-link, .fc-timegrid-more-link-inner {
 			</div>
 			<div class="col-lg-4">
 				<div class="card">
-					<div class="card-header justify-content-between d-flex align-items-center">
+					<div class="card-header d-flex align-items-center">
 						<h4 class="card-title">Orders</h4>
-						<div class="dropdown">
+
+						<button type="button" class="btn btn-primary bg-white border-0 ms-1" id="order-reload-btn" onclick="get_order_preview_data('reload');" data-order-value="">
+							<i class="icon nav-icon text-primary" data-feather="refresh-cw"></i>
+						</button>
+
+						<div class="dropdown ms-auto">
 							<a class="dropdown-toggle btn btn-light btn-sm" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="text-muted" id="order-preview-text">Weekly
 								<i class="mdi mdi-chevron-down ms-1"></i></span>
 							</a>
 
 							<div class="dropdown-menu">
-								<a class="dropdown-item" href="#!" onclick="get_order_preview_data('Monthly');">Monthly</a>
-								<a class="dropdown-item" href="#!" onclick="get_order_preview_data('Weekly');">Weekly</a>
+								<a class="dropdown-item" href="#!" onclick="set_order_value('Monthly');">Monthly</a>
+								<a class="dropdown-item" href="#!" onclick="set_order_value('Weekly');">Weekly</a>
 							</div>
 						</div>
-						</div><!-- end card header --> 
-					<div class="card-body">
-						<div class="d-flex justify-content-between">
-							<div>
-								<h4 class="mt-2 font-weight-bold mb-2 d-flex align-items-center" id="order-preview-value"></h4>
-							</div>
-						</div>
+					</div><!-- end card header --> 
 
-						<div id="order-preview-chart" class="apex-charts"></div>                              
+					<div class="card-body">
+						<div class="text-center d-none" id="order-preview-chart-spinner">
+							<div class="spinner-border text-primary" role="status">
+								<span class="visually-hidden">Loading...</span>
+							</div>
+						</div>
+						
+						<div>
+							<div class="d-flex justify-content-between">
+								<div>
+									<h4 class="mt-2 font-weight-bold mb-2 d-flex align-items-center" id="order-preview-value"></h4>
+								</div>
+							</div>
+						
+
+							<div id="order-preview-chart" class="apex-charts"></div>                              
+						</div>
 					</div>
 				</div><!--end card-->
 				
 				<div class="card">
-					<div class="card-header justify-content-between d-flex align-items-center">
+					<div class="card-header d-flex align-items-center">
 						<h4 class="card-title">Profit</h4>
-						<div class="dropdown">
+
+						<button type="button" class="btn btn-primary bg-white border-0 ms-1" id="profit-reload-btn" onclick="get_profit_preview_data('reload');" data-profit-value="">
+							<i class="icon nav-icon text-primary" data-feather="refresh-cw"></i>
+						</button>
+
+						<div class="dropdown ms-auto">
 							<a class="dropdown-toggle btn btn-light btn-sm" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
 								aria-expanded="false"><span class="text-muted">Monthly<i
 										class="mdi mdi-chevron-down ms-1"></i></span>
 							</a>
 
 							<div class="dropdown-menu">
-								<a class="dropdown-item" href="#">Monthly</a>
+								<a class="dropdown-item" href="#!" onclick="set_profit_value('Monthly');">Monthly</a>
 							</div>
 						</div>
 					</div><!-- end card header --> 
 					<div class="card-body">
-						<div class="d-flex justify-content-between">
-							<div>
-								<h4 class="mt-2 font-weight-bold mb-2 d-flex align-items-center" id="profit-preview-value"></h4>
+						<div class="text-center d-none" id="profit-preview-chart-spinner">
+							<div class="spinner-border text-primary" role="status">
+								<span class="visually-hidden">Loading...</span>
 							</div>
 						</div>
+						
 
-						<div id="profit-preview-chart" class="apex-charts"></div>
+						<div>
+							<div class="d-flex justify-content-between">
+								<div>
+									<h4 class="mt-2 font-weight-bold mb-2 d-flex align-items-center" id="profit-preview-value"></h4>
+								</div>
+							</div>
+
+							<div id="profit-preview-chart" class="apex-charts"></div>
+						</div>
 					</div>
 				</div><!--end card-->
 			</div>
@@ -195,28 +224,46 @@ var order_chart_options={
 var order_chart = new ApexCharts(document.querySelector("#order-preview-chart"), order_chart_options);
 order_chart.render();
 
-async function get_order_preview_data(value) {
+function set_order_value(value) {
 	if (isEmpty(value)) {
 		value = 'Weekly';
 	}
+	document.querySelector("#order-reload-btn").dataset.value=value;
+	get_order_preview_data();
+}
+
+async function get_order_preview_data(cache) {
+	if (isEmpty(cache)) {
+		cache = '';
+	}
+
+	value = document.querySelector("#order-reload-btn").dataset.value;
 
 	document.querySelector("span[id=order-preview-text]").innerHTML = `${value}<i class="mdi mdi-chevron-down ms-1"></i></span>`;
 	document.querySelector("#order-preview-chart").innerHTML = '';
 
-    const response = await fetch(`{% url 'order:preview' %}?standard=${value}`, 
+	spinner = document.querySelector("#order-preview-chart-spinner");
+	spinner.classList.remove('d-none');
+
+    const response = await fetch(`{% url 'order:preview' %}?standard=${value}&cache=${cache}`, 
 	{
 		method: "GET",
 	})
 	.then(response => response.json())
 	.then(data => {
+		spinner.className += ' d-none';
+
 		console.log(data.chart_data);
 		document.querySelector('h4[id=order-preview-value]').innerHTML = '총:' + data.count + '건';
 		order_chart.updateSeries([{
 			data: data.chart_data
 		}])
 	});
+	
+	
+	
 }
-get_order_preview_data();
+set_order_value();
 
 
 /*Profit Charts*/
@@ -248,15 +295,29 @@ var profit_chart_options={
 var profit_chart = new ApexCharts(document.querySelector("#profit-preview-chart"), profit_chart_options);
 profit_chart.render();
 
-async function get_profit_preview_data(value) {
+
+function set_profit_value(value) {
 	if (isEmpty(value)) {
 		value = 'Monthly';
 	}
+	document.querySelector("#profit-reload-btn").dataset.value=value;
+	get_profit_preview_data();
+}
+
+
+async function get_profit_preview_data(cache) {
+	if (isEmpty(cache)) {
+		cache = '';
+	}
+
+	value = document.querySelector("#profit-reload-btn").dataset.value;
 
 	//document.querySelector("span[id=order-preview-text]").innerHTML = `${value}<i class="mdi mdi-chevron-down ms-1"></i></span>`;
 	document.querySelector("#profit-preview-chart").innerHTML = '';
 
-    const response = await fetch(`{% url 'profit:preview' %}?standard=${value}`, 
+	document.querySelector("#profit-preview-chart-spinner").classList.remove('d-none');
+
+    const response = await fetch(`{% url 'profit:preview' %}?standard=${value}&cache=${cache}`, 
 	{
 		method: "GET",
 	})
@@ -267,6 +328,8 @@ async function get_profit_preview_data(value) {
 			data: data.chart_data
 		}])
 	});
+
+	document.querySelector("#profit-preview-chart-spinner").className += ' d-none';
 }
 get_profit_preview_data();
 
